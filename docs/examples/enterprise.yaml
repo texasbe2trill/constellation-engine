@@ -1,0 +1,320 @@
+# docs/examples/enterprise.yaml
+services:
+  # Edge / Entry
+  - id: api-gateway
+    name: api-gateway
+  - id: web-frontend
+    name: web-frontend
+  - id: mobile-api
+    name: mobile-api
+
+  # Core platform services
+  - id: auth
+    name: auth-service
+  - id: user
+    name: user-service
+  - id: catalog
+    name: catalog-service
+  - id: checkout
+    name: checkout-service
+  - id: payments
+    name: payments-service
+  - id: orders
+    name: orders-service
+  - id: inventory
+    name: inventory-service
+  - id: shipping
+    name: shipping-service
+  - id: notifications
+    name: notifications-service
+
+  # Shared infra
+  - id: redis
+    name: redis-cache
+  - id: kafka
+    name: kafka-bus
+  - id: elastic
+    name: search-cluster
+  - id: postgres
+    name: postgres-primary
+  - id: object-store
+    name: object-store
+
+  # Observability (modeled as dependencies for realism)
+  - id: telemetry
+    name: telemetry-collector
+  - id: audit-log
+    name: audit-log-service
+
+  # Replicated workers (think: multiple consumers / regional replicas)
+  - id: orders-worker-1
+    name: orders-worker-1
+  - id: orders-worker-2
+    name: orders-worker-2
+  - id: orders-worker-3
+    name: orders-worker-3
+
+  - id: notif-worker-1
+    name: notif-worker-1
+  - id: notif-worker-2
+    name: notif-worker-2
+
+  # Regional-ish read replicas / APIs (replicated services)
+  - id: catalog-read-us
+    name: catalog-read-us
+  - id: catalog-read-eu
+    name: catalog-read-eu
+  - id: catalog-read-apac
+    name: catalog-read-apac
+
+dependencies:
+  # Entry depends on core
+  - src: web-frontend
+    dst: api-gateway
+    dep_type: hard
+    call_type: sync
+
+  - src: mobile-api
+    dst: api-gateway
+    dep_type: hard
+    call_type: sync
+
+  - src: api-gateway
+    dst: auth
+    dep_type: hard
+    call_type: sync
+
+  - src: api-gateway
+    dst: user
+    dep_type: hard
+    call_type: sync
+
+  - src: api-gateway
+    dst: catalog
+    dep_type: hard
+    call_type: sync
+
+  - src: api-gateway
+    dst: checkout
+    dep_type: hard
+    call_type: sync
+
+  # Core service dependencies
+  - src: user
+    dst: postgres
+    dep_type: hard
+    call_type: sync
+
+  - src: auth
+    dst: postgres
+    dep_type: hard
+    call_type: sync
+
+  - src: catalog
+    dst: postgres
+    dep_type: hard
+    call_type: sync
+
+  - src: catalog
+    dst: redis
+    dep_type: soft
+    call_type: sync
+
+  - src: catalog
+    dst: elastic
+    dep_type: soft
+    call_type: async
+
+  - src: checkout
+    dst: payments
+    dep_type: hard
+    call_type: sync
+
+  - src: checkout
+    dst: orders
+    dep_type: hard
+    call_type: sync
+
+  - src: checkout
+    dst: inventory
+    dep_type: hard
+    call_type: sync
+
+  - src: payments
+    dst: postgres
+    dep_type: hard
+    call_type: sync
+
+  - src: orders
+    dst: postgres
+    dep_type: hard
+    call_type: sync
+
+  - src: orders
+    dst: kafka
+    dep_type: soft
+    call_type: async
+
+  - src: inventory
+    dst: postgres
+    dep_type: hard
+    call_type: sync
+
+  - src: shipping
+    dst: orders
+    dep_type: hard
+    call_type: sync
+
+  - src: shipping
+    dst: postgres
+    dep_type: hard
+    call_type: sync
+
+  - src: notifications
+    dst: kafka
+    dep_type: hard
+    call_type: async
+
+  - src: notifications
+    dst: object-store
+    dep_type: soft
+    call_type: async
+
+  # Workers depend on the bus and their storage
+  - src: orders-worker-1
+    dst: kafka
+    dep_type: hard
+    call_type: async
+
+  - src: orders-worker-1
+    dst: postgres
+    dep_type: hard
+    call_type: sync
+
+  - src: orders-worker-2
+    dst: kafka
+    dep_type: hard
+    call_type: async
+
+  - src: orders-worker-2
+    dst: postgres
+    dep_type: hard
+    call_type: sync
+
+  - src: orders-worker-3
+    dst: kafka
+    dep_type: hard
+    call_type: async
+
+  - src: orders-worker-3
+    dst: postgres
+    dep_type: hard
+    call_type: sync
+
+  - src: notif-worker-1
+    dst: kafka
+    dep_type: hard
+    call_type: async
+
+  - src: notif-worker-2
+    dst: kafka
+    dep_type: hard
+    call_type: async
+
+  # Regional read APIs depend on catalog + cache/search
+  - src: catalog-read-us
+    dst: catalog
+    dep_type: hard
+    call_type: sync
+
+  - src: catalog-read-us
+    dst: redis
+    dep_type: soft
+    call_type: sync
+
+  - src: catalog-read-eu
+    dst: catalog
+    dep_type: hard
+    call_type: sync
+
+  - src: catalog-read-eu
+    dst: redis
+    dep_type: soft
+    call_type: sync
+
+  - src: catalog-read-apac
+    dst: catalog
+    dep_type: hard
+    call_type: sync
+
+  - src: catalog-read-apac
+    dst: redis
+    dep_type: soft
+    call_type: sync
+
+  # “Everyone emits telemetry” (soft dependency)
+  - src: api-gateway
+    dst: telemetry
+    dep_type: soft
+    call_type: async
+
+  - src: auth
+    dst: telemetry
+    dep_type: soft
+    call_type: async
+
+  - src: user
+    dst: telemetry
+    dep_type: soft
+    call_type: async
+
+  - src: catalog
+    dst: telemetry
+    dep_type: soft
+    call_type: async
+
+  - src: checkout
+    dst: telemetry
+    dep_type: soft
+    call_type: async
+
+  - src: payments
+    dst: telemetry
+    dep_type: soft
+    call_type: async
+
+  - src: orders
+    dst: telemetry
+    dep_type: soft
+    call_type: async
+
+  - src: inventory
+    dst: telemetry
+    dep_type: soft
+    call_type: async
+
+  - src: shipping
+    dst: telemetry
+    dep_type: soft
+    call_type: async
+
+  - src: notifications
+    dst: telemetry
+    dep_type: soft
+    call_type: async
+
+  # Audit logging (hard for auth/payments/orders to show “critical” side effects)
+  - src: auth
+    dst: audit-log
+    dep_type: hard
+    call_type: async
+
+  - src: payments
+    dst: audit-log
+    dep_type: hard
+    call_type: async
+
+  - src: orders
+    dst: audit-log
+    dep_type: hard
+    call_type: async
