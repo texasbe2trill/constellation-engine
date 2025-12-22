@@ -1,0 +1,18 @@
+services:
+  - id: api
+    name: public-api
+  - id: auth
+    name: auth-service
+  - id: db
+    name: postgres
+
+dependencies:
+  - src: api
+    dst: auth
+    dep_type: hard
+    call_type: sync
+
+  - src: auth
+    dst: db
+    dep_type: soft
+    call_type: async
