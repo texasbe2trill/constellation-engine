@@ -32,17 +32,28 @@ It focuses purely on structural dependency analysis using deterministic rules.
 
 ## Quick Start
 
+### Install
+
+```bash
+# From the repo root (editable for local development)
+pip install -e .
+# or install directly from a published wheel/sdist
+pip install constellation-engine
+```
+
+This installs the `constellation-engine` console script defined in `pyproject.toml`.
+
 ### Basic Commands
 
 ```bash
 # Validate system definition
-python -m constellation_engine.cli.main validate docs/examples/simple.yaml
+constellation-engine validate docs/examples/simple.yaml
 
 # View system statistics
-python -m constellation_engine.cli.main stats docs/examples/simple.yaml
+constellation-engine stats docs/examples/simple.yaml
 
-# Analyze blast radius for a service failure
-python -m constellation_engine.cli.main blast-radius docs/examples/simple.yaml --service db --failure down
+# Analyze blast radius for a service failure (flags are required)
+constellation-engine blast-radius --service db --failure down docs/examples/simple.yaml
 ```
 
 ### Run Tests
@@ -64,7 +75,7 @@ Constellation Engine includes a comprehensive enterprise architecture example at
 Identify which services have the highest downstream impact:
 
 ```bash
-python -m constellation_engine.cli.main criticality docs/examples/enterprise.yaml
+constellation-engine criticality docs/examples/enterprise.yaml
 ```
 ```text
 criticality ranking (failure=down):
@@ -86,8 +97,9 @@ Analyze the cascading impact of critical infrastructure failures:
 
 **Scenario: PostgreSQL Database Failure**
 ```bash
-python -m constellation_engine.cli.main blast-radius docs/examples/enterprise.yaml --service postgres --failure down
+constellation-engine blast-radius --service postgres --failure down docs/examples/enterprise.yaml
 ```
+Both `--service` and `--failure` are required flags; omitting either will return a usage error.
 ```text
 blast radius from postgres (down) [impacts dependers]:
 - postgres: down
@@ -107,6 +119,7 @@ blast radius from postgres (down) [impacts dependers]:
 - catalog-read-apac: down
 - checkout: down
 - web-frontend: down
+- mobile-api: down
 ```
 
 *Result: 17 of 20 services impacted by a single database failure — a critical architectural dependency.*

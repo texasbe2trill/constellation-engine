@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "constellation-engine"
+version = "0.1.0"
+description = "A dependency reasoning engine for deterministic blast radius and criticality analysis."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Chris Campbell" }]
+keywords = ["reliability", "security", "graphs", "sre", "systems"]
+dependencies = [
+  "networkx>=3.0",
+  "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.5",
+  "mypy>=1.8",
+]
+
+[project.scripts]
+constellation-engine = "constellation_engine.cli.main:main"
+
+[tool.setuptools]
+packages = ["constellation_engine"]
