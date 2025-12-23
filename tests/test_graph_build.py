@@ -1,8 +1,9 @@
 import networkx as nx
 
-from constellation_engine.core.types import Service, Dependency, ServiceId, DependencyType, CallType
-from constellation_engine.core.validate import validate_or_raise
 from constellation_engine.core.graph import build_graph
+from constellation_engine.core.types import CallType, Dependency, DependencyType, Service, ServiceId
+from constellation_engine.core.validate import validate_or_raise
+
 
 def test_build_graph_has_expected_nodes_edges_and_attributes():
     services = [

@@ -72,9 +72,9 @@ def main() -> int:
         return 0
     
     if args.cmd == "blast-radius":
+        from constellation_engine.core.types import ServiceId
         from constellation_engine.sim.models import FailureType
         from constellation_engine.sim.propagate import propagate_failure
-        from constellation_engine.core.types import ServiceId
 
         g = build_graph(services, deps)
 

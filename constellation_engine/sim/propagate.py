@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import networkx as nx
 
+from constellation_engine.core.types import CallType, DependencyType, ServiceId
 from constellation_engine.sim.models import FailureType
-from constellation_engine.core.types import DependencyType, CallType, ServiceId
 
 
 def propagate_failure(

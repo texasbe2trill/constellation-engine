@@ -1,5 +1,5 @@
-from constellation_engine.core.types import Service, Dependency, ServiceId
 from constellation_engine.core.graph import build_graph
+from constellation_engine.core.types import Dependency, Service, ServiceId
 from constellation_engine.sim.criticality import compute_criticality
 from constellation_engine.sim.models import FailureType
 

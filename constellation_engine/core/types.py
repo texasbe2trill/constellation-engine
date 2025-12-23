@@ -1,9 +1,9 @@
 # Import statements
-from __future__ import annotations # For future compatibility with type hinting
+from __future__ import annotations  # For future compatibility with type hinting
 
-from dataclasses import dataclass # For defining data classes
-from enum import Enum # For creating enumerations
-from typing import NewType, Mapping, Any # For type hinting
+from dataclasses import dataclass  # For defining data classes
+from enum import Enum  # For creating enumerations
+from typing import Any, Mapping, NewType  # For type hinting
 
 ServiceId = NewType("ServiceId", str) # New type for service identifiers
 

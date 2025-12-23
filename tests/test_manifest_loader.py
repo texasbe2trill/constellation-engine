@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from constellation_engine.io.loaders import load_manifest, manifest_to_domain
 from constellation_engine.core.validate import validate_model
+from constellation_engine.io.loaders import load_manifest, manifest_to_domain
 
 
 def test_load_manifest_yaml_and_convert_to_domain(tmp_path: Path) -> None:

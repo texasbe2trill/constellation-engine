@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-from constellation_engine.core.types import (
-    Service,
-    Dependency,
-    ServiceId,
-    DependencyType,
-    CallType,
-)
 from constellation_engine.core.graph import build_graph
+from constellation_engine.core.types import (
+    Dependency,
+    Service,
+    ServiceId,
+)
 from constellation_engine.sim.models import FailureType
 from constellation_engine.sim.propagate import propagate_failure
 

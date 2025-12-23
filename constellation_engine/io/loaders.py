@@ -7,13 +7,14 @@ from typing import Any
 import yaml  # type: ignore
 
 from constellation_engine.core.types import (
-    Service,
-    Dependency,
-    ServiceId,
-    DependencyType,
     CallType,
+    Dependency,
+    DependencyType,
+    Service,
+    ServiceId,
 )
-from .schema import Manifest, ServiceSpec, DependencySpec
+
+from .schema import DependencySpec, Manifest, ServiceSpec
 
 
 class ManifestError(ValueError):

@@ -1,8 +1,10 @@
 from __future__ import annotations  # For future compatibility with type hinting
+
 import networkx as nx  # Importing NetworkX for graph operations
 
-from .types import Service, Dependency, ServiceId # Importing types from the same package
-from .validate import validate_or_raise # Importing validation function
+from .types import Dependency, Service  # Importing types from the same package
+from .validate import validate_or_raise  # Importing validation function
+
 
 def build_graph(services: list[Service], dependencies: list[Dependency]) -> nx.DiGraph:
     """Builds a directed graph from the given services and dependencies.

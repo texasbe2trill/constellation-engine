@@ -3,6 +3,7 @@ from __future__ import annotations  # For future compatibility with type hinting
 from dataclasses import dataclass  # For defining data classes
 from typing import Any, Mapping  # For type hinting
 
+
 @dataclass(frozen=True, slots=True)
 class ServiceSpec:
     """Data class representing the schema of a service."""

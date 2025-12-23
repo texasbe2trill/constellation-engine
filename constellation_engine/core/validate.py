@@ -1,10 +1,11 @@
 # Import Statements
-from __future__ import annotations # For future compatibility with type hinting
+from __future__ import annotations  # For future compatibility with type hinting
 
-from dataclasses import dataclass # For defining data classes
-from typing import Iterable # For type hinting
+from dataclasses import dataclass  # For defining data classes
+from typing import Iterable  # For type hinting
 
-from .types import Service, Dependency, ServiceId # Importing types from the same package
+from .types import Dependency, Service, ServiceId  # Importing types from the same package
+
 
 class ValidationError(Exception):
     """Raised when the dependency model violates Constellation"""
